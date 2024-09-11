@@ -42,6 +42,28 @@ export default class SPLRugchecker {
         return rugCheckResult;
     }
 
+    async checkMetaData(tokenAddress: string): Promise<RugCheckResult> {
+        const [metadataCheckResult] = await Promise.all([
+            this.metadataChecker.check(tokenAddress)
+        ]);
+
+        const rugCheckResult = new RugCheckResult();
+        rugCheckResult.metadata = metadataCheckResult;
+
+        return rugCheckResult;
+    }
+
+    async checkHolders(tokenAddress: string): Promise<RugCheckResult> {
+        const [holdersCheckResult] = await Promise.all([
+            this.holdersChecker.check(tokenAddress)
+        ]);
+
+        const rugCheckResult = new RugCheckResult();
+        rugCheckResult.holders = holdersCheckResult;
+
+        return rugCheckResult;
+    }
+
     rugScore(rugCheckResult: RugCheckResult): number {
         let rugScore = 0;
         if (rugCheckResult.metadata.isMintable === true) {
